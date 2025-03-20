@@ -1,36 +1,26 @@
-package com.myat.java.springBoot.lottery.model;
+package com.myat.java.springBoot.lottery.dto;
 
 import java.util.Date;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.Document;
-@Document(collection = "users")
-public class User {
-	
-	@Id
+
+public class UserDto {
+
 	private String id;
 	private String username;
-	private String password;
 	private String role;
 	private String phone;
 	private String address;
-	
-	@CreatedDate
 	private Date created_at;
-	
-	@LastModifiedDate
 	private Date updated_at;
 	
-	public User() {}
-
-	public User(String id, String username, String password, 
-				String role, String phone, String address,
-				Date created_at, Date updated_at) {
+	public UserDto() {}
+	
+	public UserDto(String id, String username, String password, 
+			String role, String phone, String address,
+			Date created_at, Date updated_at) 
+	{
 		this.id = id;
 		this.username = username;
-		this.password = password;
 		this.role = role;
 		this.phone = phone;
 		this.address = address;
@@ -52,14 +42,6 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getRole() {
@@ -101,8 +83,4 @@ public class User {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-	
-	
-	
-	
 }
