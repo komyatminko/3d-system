@@ -1,12 +1,9 @@
-package com.myat.java.springBoot.lottery.model;
+package com.myat.java.springBoot.lottery.dto;
 
 import java.util.Date;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "bankers")
-public class Banker extends User{
-
+public class BankerDto extends UserDto{
+	
 	private Date accountExpiredDate;
 	private Boolean isAccountExpired;
 	
@@ -22,11 +19,4 @@ public class Banker extends User{
 	public void setIsAccountExpired(Boolean isAccountExpired) {
 		this.isAccountExpired = isAccountExpired;
 	}
-	
-	@Override
-	public String toString() {
-		return "Banker [accountExpiredDate=" + accountExpiredDate + ", isAccountExpired=" + isAccountExpired + "]";
-	}
-	
-	
 }

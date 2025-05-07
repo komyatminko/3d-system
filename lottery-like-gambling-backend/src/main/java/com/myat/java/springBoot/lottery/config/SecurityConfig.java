@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -25,7 +26,7 @@ import com.myat.java.springBoot.lottery.security.JwtUtil;
 
 @Configuration
 @EnableWebFluxSecurity
-
+@EnableReactiveMongoAuditing
 public class SecurityConfig {
 
 	@Autowired
@@ -36,7 +37,8 @@ public class SecurityConfig {
 	
 	private static final String[] AUTH_WHITELIST = {
             "/public/**",
-            "/v1/books/**",
+            "/v1/bankers/**",
+            "/v1/middlemen/**"
     };
 	
 	
@@ -46,10 +48,12 @@ public class SecurityConfig {
 	        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 	        .csrf(ServerHttpSecurity.CsrfSpec::disable) 
 	        .authorizeExchange(exchanges -> exchanges
-	            .pathMatchers("/api/auth/register", "/api/auth/login", "/api/auth/me").permitAll()
-//	            .pathMatchers(AUTH_WHITELIST).permitAll()
-	            .anyExchange().authenticated()
-	        )
+	        	    .pathMatchers("/v1/auth/**").permitAll()
+	        	    .pathMatchers("/v1/middlemen/**").hasAnyAuthority("BANKER", "ADMIN") 
+	        	    .pathMatchers("/v1/bankers/**").hasAuthority("ADMIN")
+	        	    
+	        	    .anyExchange().authenticated()
+	        	)
 	        .addFilterAt(jwtAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION) 
 	        .addFilterAt(webFilter(), SecurityWebFiltersOrder.AUTHORIZATION) 
 	        .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable) 

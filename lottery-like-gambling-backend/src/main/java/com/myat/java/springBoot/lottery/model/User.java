@@ -1,6 +1,7 @@
 package com.myat.java.springBoot.lottery.model;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -13,9 +14,9 @@ public class User {
 	private String id;
 	private String username;
 	private String password;
-	private String role;
 	private String phone;
 	private String address;
+	private List<Role> roles;
 	
 	@CreatedDate
 	private Date created_at;
@@ -26,14 +27,14 @@ public class User {
 	public User() {}
 
 	public User(String id, String username, String password, 
-				String role, String phone, String address,
-				Date created_at, Date updated_at) {
+				String phone, String address,
+				List<Role> roles, Date created_at, Date updated_at) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.role = role;
 		this.phone = phone;
 		this.address = address;
+		this.roles = roles;
 		this.created_at = created_at;
 		this.updated_at = updated_at;
 	}
@@ -62,14 +63,6 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -86,6 +79,14 @@ public class User {
 		this.address = address;
 	}
 
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
 	public Date getCreated_at() {
 		return created_at;
 	}
@@ -100,6 +101,13 @@ public class User {
 
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", phone=" + phone
+				+ ", address=" + address + ", roles=" + roles + ", created_at=" + created_at + ", updated_at="
+				+ updated_at + "]";
 	}
 	
 	

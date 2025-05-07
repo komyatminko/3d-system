@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myat.java.springBoot.lottery.dto.UserDto;
+import com.myat.java.springBoot.lottery.model.Banker;
 import com.myat.java.springBoot.lottery.model.JWTToken;
+import com.myat.java.springBoot.lottery.model.MiddleMan;
 import com.myat.java.springBoot.lottery.model.User;
 import com.myat.java.springBoot.lottery.response.ApiResponse;
 import com.myat.java.springBoot.lottery.service.AuthService;
@@ -29,7 +32,7 @@ import jakarta.validation.Validator;
 
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/v1/auth")
 public class AuthController {
 	
 	@Autowired
@@ -38,14 +41,50 @@ public class AuthController {
 	@Autowired
 	AuthService authService;
 	
-    @PostMapping("/register")
-    public Mono<JWTToken> register(@Valid @RequestBody User user) {
+    @PostMapping("/register/user")
+    public Mono<ResponseEntity<ApiResponse>> registerUser(@Valid @RequestBody User user) {
         if (!this.validation.validate(user).isEmpty()) {
             return Mono.error(new RuntimeException("Bad request"));
         }
-        return this.authService.register(user);
+        return this.authService.registerUser(user)
+        		.flatMap(data ->
+        				Mono.just(ResponseEntity.ok()
+                                .body(ApiResponse.success("login success", 200, data.getToken())))
+        				)
+        		.onErrorResume(RuntimeException.class, err-> {
+				return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, "bad request", err.getMessage())));
+			});
     }
     
+//    @PostMapping("/register/banker")
+//    public Mono<ResponseEntity<ApiResponse>> registerBanker(@Valid @RequestBody Banker banker) {
+//        if (!this.validation.validate(banker).isEmpty()) {
+//            return Mono.error(new RuntimeException("Bad request"));
+//        }
+//        return this.authService.registerBanker(banker)
+//        		.flatMap(data ->
+//        				Mono.just(ResponseEntity.ok()
+//                                .body(ApiResponse.success("login success", 200, data.getToken())))
+//        				)
+//        		.onErrorResume(RuntimeException.class, err-> {
+//				return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, "bad request", err.getMessage())));
+//			});
+//    }
+    
+//    @PostMapping("/register/middleman")
+//    public Mono<ResponseEntity<ApiResponse>> registerMiddleman(@Valid @RequestBody MiddleMan middleMan) {
+//        if (!this.validation.validate(middleMan).isEmpty()) {
+//            return Mono.error(new RuntimeException("Bad request"));
+//        }
+//        return this.authService.registerMiddleMan(middleMan)
+//        		.flatMap(data ->
+//        				Mono.just(ResponseEntity.ok()
+//                                .body(ApiResponse.success("login success", 200, data.getToken())))
+//        				)
+//        		.onErrorResume(RuntimeException.class, err-> {
+//				return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, "bad request", err.getMessage())));
+//			});
+//    }
    
     @PostMapping("/login")
     public Mono<ResponseEntity<ApiResponse>> login(@RequestBody User user) {

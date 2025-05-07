@@ -25,6 +25,7 @@ public class JWTReactiveAuthenticationManager implements ReactiveAuthenticationM
 	
 	@Override
 	public Mono<Authentication> authenticate(Authentication authentication) {
+//		System.out.println("password " + authentication.getCredentials());
 		if(authentication.isAuthenticated()) {
             return Mono.just(authentication);
         }
@@ -34,23 +35,27 @@ public class JWTReactiveAuthenticationManager implements ReactiveAuthenticationM
                 .cast(UsernamePasswordAuthenticationToken.class)
                 .flatMap(this::authenticateToken)
                 .publishOn(Schedulers.parallel())
-                .onErrorResume(e -> raiseBadCredentials())
+                .onErrorResume(e -> raiseBadCredentials1())
+                .doOnNext(u-> System.out.println("password " + u.getPassword() + " authentication password " + authentication.getCredentials()))
                 .filter(u -> passwordEncoder.matches((String) authentication.getCredentials(), u.getPassword()))
-                .switchIfEmpty(Mono.defer(this::raiseBadCredentials))
+                .switchIfEmpty(Mono.defer(this::raiseBadCredentials2))
                 .map(u -> new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), u.getAuthorities()));
 	}
 	
 	private <T> Mono<T> raiseBadCredentials() {
         return Mono.error(new BadCredentialsException("Invalid Credentials"));
     }
+	private <T> Mono<T> raiseBadCredentials1() {
+        return Mono.error(new BadCredentialsException("Invalid Credentials1"));
+    }
+	private <T> Mono<T> raiseBadCredentials2() {
+        return Mono.error(new BadCredentialsException("Invalid Credentials2"));
+    }
 	
 	private Mono<UserDetails> authenticateToken(final UsernamePasswordAuthenticationToken authenticationToken) {
         String username = authenticationToken.getName();
-
-        //logger.info("checking authentication for user " + username);
-
+        
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            //logger.info("authenticated user " + username + ", setting security context");
             return this.userDetailsService.findByUsername(username);
         }
 

@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter implements WebFilter {
             String username = jwtUtil.getUsernameFromToken(token);
 
             return userDetailsService.findByUsername(username)
+//            	.doOnNext(userDetails -> System.out.println("User Role " + userDetails.getAuthorities()))
                 .map(userDetails -> new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()))
                 .flatMap(authentication -> chain.filter(exchange)
                     .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication)));

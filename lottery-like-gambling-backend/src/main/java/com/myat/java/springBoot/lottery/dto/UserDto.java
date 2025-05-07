@@ -1,27 +1,29 @@
 package com.myat.java.springBoot.lottery.dto;
 
 import java.util.Date;
+import java.util.List;
 
+import com.myat.java.springBoot.lottery.model.Role;
 
 public class UserDto {
 
 	private String id;
 	private String username;
-	private String role;
 	private String phone;
 	private String address;
+	private List<Role> roles;	
 	private Date created_at;
 	private Date updated_at;
 	
 	public UserDto() {}
 	
 	public UserDto(String id, String username, String password, 
-			String role, String phone, String address,
+			List<Role> roles, String phone, String address,
 			Date created_at, Date updated_at) 
 	{
 		this.id = id;
 		this.username = username;
-		this.role = role;
+		this.roles = roles;
 		this.phone = phone;
 		this.address = address;
 		this.created_at = created_at;
@@ -44,12 +46,12 @@ public class UserDto {
 		this.username = username;
 	}
 
-	public String getRole() {
-		return role;
+	public List<Role> getRoles() {
+		return roles;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	public String getPhone() {
