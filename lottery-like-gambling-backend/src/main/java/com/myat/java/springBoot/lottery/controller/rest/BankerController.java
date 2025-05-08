@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myat.java.springBoot.lottery.dto.BankerDto;
+import com.myat.java.springBoot.lottery.dto.MiddleManDto;
 import com.myat.java.springBoot.lottery.exception.BankerNotFoundException;
 import com.myat.java.springBoot.lottery.exception.MiddlemanNotFoundException;
 import com.myat.java.springBoot.lottery.model.Banker;
@@ -113,8 +115,26 @@ public class BankerController {
 			});
 	}
 	
+	@PutMapping("/{bankerId}")
+	public Mono<ResponseEntity<ApiResponse>> updateBanker(
+			@RequestBody BankerDto bankerDto,
+			@PathVariable String bankerId
+			){
+		
+		return this.bankerService.updateBankerById(bankerDto, bankerId)
+				.flatMap( data -> Mono.just(ResponseEntity.ok().body(ApiResponse.success("Banker is updated successfully.", 200, data))))
+				.onErrorResume(BankerNotFoundException.class, err -> 
+					Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body(ApiResponse.error(404, "Banker not found.", err.getMessage())))
+				)
+				.onErrorResume(Exception.class, err -> 
+					Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+						.body(ApiResponse.error(500, "An unexpected error occurred.", err.getMessage()))))
+				;
+	}
+	
 	@DeleteMapping("/{bankerId}")
-	public Mono<ResponseEntity<ApiResponse>> removeMiddleman(@PathVariable String bankerId) {
+	public Mono<ResponseEntity<ApiResponse>> removeBanker(@PathVariable String bankerId) {
 		System.out.println("Banker Controller.....");
 		return this.bankerService.removeBanker(bankerId)
 				.flatMap(data -> {

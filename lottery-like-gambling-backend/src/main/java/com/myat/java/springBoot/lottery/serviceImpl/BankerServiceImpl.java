@@ -66,8 +66,24 @@ public class BankerServiceImpl implements BankerService{
 	        );
 	}
 
-
-
-	
+	@Override
+	public Mono<BankerDto> updateBankerById(BankerDto bankerDto, String bankerId) {
+		
+		if(bankerId != null) {
+			return this.bankerDao.findById(bankerId)
+					.switchIfEmpty(Mono.error(new BankerNotFoundException("Banker not found to update.")))
+					.flatMap(oldBanker ->  {
+						oldBanker.setUsername(bankerDto.getUsername());
+						oldBanker.setAddress(bankerDto.getAddress());
+						oldBanker.setPhone(bankerDto.getPhone());
+						return this.bankerDao.save(oldBanker);
+					})
+					.map(savedBanker -> this.modelMapper.map(savedBanker, BankerDto.class))
+					;
+		}else {
+			return Mono.error(new RuntimeException("Banker id is missing to update."));
+		}
+		
+	}
 
 }

@@ -10,5 +10,6 @@ public interface BankerService {
 	public Flux<BankerDto> getAllBankers();
 	public Mono<BankerDto> getBankerById(String bankerId);
 	public Flux<BankerDto> getBankersWithLimit(int page, int size);
+	public Mono<BankerDto> updateBankerById(BankerDto bankerDto, String bankerId);
 	public Mono<BankerDto> removeBanker(String bankerId);
 }
