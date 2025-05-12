@@ -1,0 +1,29 @@
+create database databaseName character set utf8 collate utf8_unicode_ci;
+
+create table tableName (c1 datatype primary key auto_increment, c2 datatype not null, c3 varchar default 'Unknow', foreign key(c2) references tableName(columnName));
+
+insert into tableName (c2,c3) values (data2, data3);
+
+delete from tableName where condition;
+
+update tableName set columnName = something where condition;
+
+alter table tableName add columnName datatype not null;
+
+alter table tableName drop columnName;
+
+alter table tableName modify column datatype;		//change datatype
+
+alter table tableName change oldName newName datatype;			//change cloumn name
+
+rename table oldName to Newname;
+
+alter table tableName[oldName] rename newName;
+
+select count(columnName) as sth from tableName where condition;
+
+select sum(columnName) as sth from tableName where condition;
+
+select min/max(columnName) as sth from tableName;
+
+select avg(columnName) as sth from tableName;
