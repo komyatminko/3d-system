@@ -1,0 +1,26 @@
+<h1>
+    Login Page
+</h1>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="p-4 border rounded w-100" style="max-width: 400px;">
+
+    <!-- Username -->
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input id="username" formControlName="username" type="text" class="form-control" [ngClass]="{'is-invalid': getField('username').touched && getField('username').invalid}" />
+      <div class="invalid-feedback" *ngIf="getField('username').touched && getField('username').errors">
+        <div *ngIf="getField('username').errors?.['required']" class="text-danger">Username is required.</div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input id="password" formControlName="password" type="password" class="form-control" [ngClass]="{'is-invalid': getField('password').touched && getField('password').invalid}" />
+      <div class="invalid-feedback" *ngIf="getField('password').touched && getField('password').errors">
+        <div *ngIf="getField('password').errors?.['required']">Password is required</div>
+        <div *ngIf="getField('password').errors?.['minlength']">Minimum 6 characters required</div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+  </form>
